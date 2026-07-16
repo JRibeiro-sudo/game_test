@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Pop & Play!</title>
+<style>
+  :root {
+    --bg1: #a8e6ff;
+    --bg2: #ffd6ec;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+  body {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    font-family: 'Comic Sans MS', 'Trebuchet MS', Verdana, sans-serif;
+    position: relative;
+  }
+  #stage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .item {
+    position: absolute;
+    font-size: 90px;
+    line-height: 1;
+    cursor: pointer;
+    animation: floatIn 0.4s ease-out, wiggle 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+    will-change: transform;
+    transform-origin: center;
+  }
+  @keyframes floatIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+  .pop {
+    animation: popOut 0.4s ease-out forwards !important;
+    pointer-events: none;
+  }
+  @keyframes popOut {
+    0% { transform: scale(1); opacity: 1; }
+    60% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  #scoreBar {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 34px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.35);
+    letter-spacing: 4px;
+    z-index: 10;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .confetti {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    pointer-events: none;
+    animation: confettiFall 0.9s ease-out forwards;
+    z-index: 5;
+  }
+  @keyframes confettiFall {
+    0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
+  }
+  #hint {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffffcc;
+    font-size: 20px;
+    z-index: 10;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body>
+  <div id="scoreBar">⭐ <span id="score">0</span></div>
+  <div id="stage"></div>
+  <div id="hint">Tap the pictures! 👶</div>
+
+<script>
+  const stage = document.getElementById('stage');
+  const scoreEl = document.getElementById('score');
+  let score = 0;
+
+  const EMOJIS = ['🐶','🐱','🐸','🦁','🐵','🐼','🦄','🐷','🐰','🐯','🐮','🐔','🍎','🍌','⭐','🎈','🌈','☀️','🚗','🚀'];
+  const COLORS = ['#ff595e','#ffca3a','#8ac926','#1982c4','#6a4c93','#ff924c','#52d1dc'];
+
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function playPop() {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    const startFreq = 300 + Math.random() * 200;
+    osc.frequency.setValueAtTime(startFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(startFreq * 3, now + 0.15);
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.2);
+  }
+
+  function playTa() {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    [523.25, 659.25, 783.99].forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0.2, now + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.08);
+      osc.stop(now + i * 0.08 + 0.3);
+    });
+  }
+
+  function randRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function spawnConfetti(x, y) {
+    for (let i = 0; i < 14; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = x + 'px';
+      c.style.top = y + 'px';
+      c.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const angle = Math.random() * Math.PI * 2;
+      const dist = randRange(60, 160);
+      c.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      c.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+      c.style.setProperty('--rot', randRange(0, 720) + 'deg');
+      stage.appendChild(c);
+      setTimeout(() => c.remove(), 950);
+    }
+  }
+
+  function spawnItem() {
+    const el = document.createElement('div');
+    el.className = 'item';
+    el.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+
+    const size = randRange(70, 130);
+    el.style.fontSize = size + 'px';
+
+    const margin = size;
+    const x = randRange(margin * 0.3, window.innerWidth - margin * 1.1);
+    const y = randRange(margin * 0.9, window.innerHeight - margin * 1.1);
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.animationDuration = randRange(2, 3.5) + 's, ' + randRange(1.8, 3) + 's';
+
+    el.addEventListener('pointerdown', () => pop(el), { once: true });
+
+    stage.appendChild(el);
+    return el;
+  }
+
+  function pop(el) {
+    const rect = el.getBoundingClientRect();
+    spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    playPop();
+    el.classList.add('pop');
+    setTimeout(() => el.remove(), 400);
+
+    score++;
+    scoreEl.textContent = score;
+    if (score % 10 === 0) {
+      playTa();
+    }
+
+    spawnItem();
+  }
+
+  const INITIAL_ITEMS = 6;
+  function init() {
+    for (let i = 0; i < INITIAL_ITEMS; i++) {
+      setTimeout(spawnItem, i * 150);
+    }
+  }
+
+  document.body.addEventListener('pointerdown', ensureAudio, { once: true });
+  window.addEventListener('resize', () => {});
+
+  init();
+</script>
+</body>
+</html>
