@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Magic Doodle</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #14162b;
+    touch-action: none;
+    font-family: 'Comic Sans MS', 'Trebuchet MS', Verdana, sans-serif;
+  }
+  #canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  #palette {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    border-radius: 40px;
+    z-index: 20;
+  }
+  .swatch {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .swatch.active {
+    transform: scale(1.25);
+    border-color: #fff;
+    box-shadow: 0 0 14px rgba(255,255,255,0.7);
+  }
+  #tools {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 16px;
+    z-index: 20;
+  }
+  .tool-btn {
+    font-size: 34px;
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: transform 0.15s ease;
+  }
+  .tool-btn:active {
+    transform: scale(0.88);
+  }
+  #stampBar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 20;
+  }
+  .stamp-btn {
+    font-size: 32px;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+  }
+  .stamp-btn.active {
+    background: rgba(255,255,255,0.4);
+    box-shadow: 0 0 10px rgba(255,255,255,0.6);
+  }
+  .stamp-pop {
+    position: absolute;
+    pointer-events: none;
+    font-size: 70px;
+    transform: translate(-50%, -50%) scale(0);
+    animation: stampIn 0.3s ease-out forwards;
+    z-index: 15;
+  }
+  @keyframes stampIn {
+    to { transform: translate(-50%, -50%) scale(1); }
+  }
+  #hint {
+    position: absolute;
+    bottom: 96px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffffaa;
+    font-size: 18px;
+    z-index: 20;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+</style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div id="palette">
+    <div class="swatch active" style="background:#ff595e" data-color="#ff595e"></div>
+    <div class="swatch" style="background:#ffca3a" data-color="#ffca3a"></div>
+    <div class="swatch" style="background:#8ac926" data-color="#8ac926"></div>
+    <div class="swatch" style="background:#1982c4" data-color="#1982c4"></div>
+    <div class="swatch" style="background:#6a4c93" data-color="#6a4c93"></div>
+    <div class="swatch" style="background:#ff924c" data-color="#ff924c"></div>
+    <div class="swatch" style="background:#ffffff" data-color="#ffffff"></div>
+  </div>
+
+  <div id="stampBar">
+    <button class="stamp-btn" data-stamp="">✏️</button>
+    <button class="stamp-btn" data-stamp="⭐">⭐</button>
+    <button class="stamp-btn" data-stamp="🐶">🐶</button>
+    <button class="stamp-btn" data-stamp="🌈">🌈</button>
+    <button class="stamp-btn" data-stamp="🎈">🎈</button>
+  </div>
+
+  <div id="hint">Draw with your finger! Tap a sticker to stamp it ✨</div>
+
+  <div id="tools">
+    <button class="tool-btn" id="rainbowBtn" title="Rainbow mode">🌈</button>
+    <button class="tool-btn" id="clearBtn" title="Clear">🧹</button>
+  </div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    const prev = document.createElement('canvas');
+    prev.width = canvas.width;
+    prev.height = canvas.height;
+    prev.getContext('2d').drawImage(canvas, 0, 0);
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.fillStyle = '#14162b';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(prev, 0, 0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  let currentColor = '#ff595e';
+  let rainbowMode = false;
+  let currentStamp = '';
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+  let hue = 0;
+
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function playBlip(freq) {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.18);
+  }
+
+  document.querySelectorAll('.swatch').forEach(sw => {
+    sw.addEventListener('pointerdown', () => {
+      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
+      currentColor = sw.dataset.color;
+      rainbowMode = false;
+      document.getElementById('rainbowBtn').style.background = 'rgba(255,255,255,0.15)';
+    });
+  });
+
+  document.getElementById('rainbowBtn').addEventListener('pointerdown', () => {
+    rainbowMode = !rainbowMode;
+    document.getElementById('rainbowBtn').style.background = rainbowMode
+      ? 'linear-gradient(90deg, red, orange, yellow, green, blue, violet)'
+      : 'rgba(255,255,255,0.15)';
+  });
+
+  document.getElementById('clearBtn').addEventListener('pointerdown', () => {
+    ctx.fillStyle = '#14162b';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    playBlip(220);
+  });
+
+  document.querySelectorAll('.stamp-btn').forEach(btn => {
+    btn.addEventListener('pointerdown', () => {
+      document.querySelectorAll('.stamp-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentStamp = btn.dataset.stamp;
+    });
+  });
+  document.querySelector('.stamp-btn[data-stamp=""]').classList.add('active');
+
+  function getColor() {
+    if (rainbowMode) {
+      hue = (hue + 4) % 360;
+      return `hsl(${hue}, 85%, 60%)`;
+    }
+    return currentColor;
+  }
+
+  function placeStamp(x, y, emoji) {
+    const el = document.createElement('div');
+    el.className = 'stamp-pop';
+    el.textContent = emoji;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+    playBlip(500 + Math.random() * 300);
+  }
+
+  function pointerPos(e) {
+    return { x: e.clientX, y: e.clientY };
+  }
+
+  function startDraw(e) {
+    ensureAudio();
+    const { x, y } = pointerPos(e);
+    if (currentStamp) {
+      placeStamp(x, y, currentStamp);
+      return;
+    }
+    drawing = true;
+    lastX = x;
+    lastY = y;
+    ctx.beginPath();
+    ctx.arc(x, y, 9, 0, Math.PI * 2);
+    ctx.fillStyle = getColor();
+    ctx.fill();
+  }
+
+  function moveDraw(e) {
+    if (!drawing || currentStamp) return;
+    const { x, y } = pointerPos(e);
+    ctx.strokeStyle = getColor();
+    ctx.lineWidth = 18;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    lastX = x;
+    lastY = y;
+  }
+
+  function endDraw() {
+    drawing = false;
+  }
+
+  canvas.addEventListener('pointerdown', startDraw);
+  canvas.addEventListener('pointermove', moveDraw);
+  window.addEventListener('pointerup', endDraw);
+  window.addEventListener('pointercancel', endDraw);
+</script>
+</body>
+</html>
