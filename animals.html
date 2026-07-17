@@ -42,6 +42,9 @@
   .critter.pop { animation: popOut 0.35s ease-out forwards !important; pointer-events: none; }
   @keyframes popOut { 0% { transform: scale(1); opacity:1; } 60% { transform: scale(1.5); } 100% { transform: scale(2.1); opacity: 0; } }
 
+  .critter.vanish { animation: vanishOut 0.3s ease-in forwards !important; pointer-events: none; }
+  @keyframes vanishOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.3); opacity: 0; } }
+
   .part { position: absolute; }
 
   /* ---- shared limb ---- */
@@ -263,6 +266,15 @@
     const now = audioCtx.currentTime;
     [400, 320, 260, 200].forEach((f, i) => tone(f, now + i * 0.09, 0.18, 'triangle', 0.15));
   }
+  function playSwarmCue() {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    [392, 440, 494, 523].forEach((f, i) => tone(f, now + i * 0.07, 0.2, 'square', 0.12));
+  }
+
+  function randRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 
   /* ---- Confetti ---- */
   function spawnConfetti(x, y) {
@@ -369,10 +381,8 @@
 
   function pickType() {
     const r = Math.random();
-    const decoyOnScreen = document.querySelector('.critter[data-type="bull"]');
-    if (!decoyOnScreen && r < 0.15) return 'bull';
-    if (r < 0.42) return 'horse';
-    if (r < 0.75) return 'sheep';
+    if (r < 0.34) return 'horse';
+    if (r < 0.68) return 'sheep';
     return 'giraffe';
   }
 
@@ -419,6 +429,60 @@
 
   function clearStage() {
     stage.querySelectorAll('.critter').forEach(c => c.remove());
+  }
+
+  /* ---- Baby bull: peeks in and out on its own, sometimes in a big group ---- */
+  function spawnBull(visibleMs) {
+    if (!gameActive) return;
+    const def = TYPES.bull;
+    const container = el('div', 'critter');
+    container.dataset.type = 'bull';
+
+    const size = 100 + Math.random() * 50;
+    container.style.width = size + 'px';
+    container.style.height = (size * 0.9) + 'px';
+
+    const margin = size;
+    const x = randRange(margin * 0.05, window.innerWidth - margin * 1.15);
+    const y = randRange(margin * 0.1, window.innerHeight - margin * 1.3);
+    container.style.left = x + 'px';
+    container.style.top = y + 'px';
+    container.style.animationDuration = (2 + Math.random() * 1.5) + 's, ' + (1.6 + Math.random() * 1.2) + 's';
+
+    def.build(container);
+    container.addEventListener('pointerdown', () => handleTap(container, 'bull'), { once: true });
+    stage.appendChild(container);
+
+    setTimeout(() => {
+      if (!container.isConnected) return;
+      container.classList.add('vanish');
+      setTimeout(() => container.remove(), 300);
+    }, visibleMs);
+  }
+
+  function spawnBullSwarm() {
+    if (!gameActive) return;
+    playSwarmCue();
+    const count = 4 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => spawnBull(randRange(2000, 2500)), i * 110);
+    }
+  }
+
+  function scheduleSingleBull() {
+    setTimeout(() => {
+      if (gameActive && !document.querySelector('.critter[data-type="bull"]')) {
+        spawnBull(randRange(1400, 2200));
+      }
+      scheduleSingleBull();
+    }, randRange(4000, 7000));
+  }
+
+  function scheduleBullSwarm() {
+    setTimeout(() => {
+      spawnBullSwarm();
+      scheduleBullSwarm();
+    }, randRange(16000, 26000));
   }
 
   function triggerLose() {
@@ -502,6 +566,8 @@
 
   document.body.addEventListener('pointerdown', ensureAudio, { once: true });
   init();
+  scheduleSingleBull();
+  scheduleBullSwarm();
 </script>
 </body>
 </html>
