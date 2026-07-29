@@ -23,9 +23,9 @@
   }
   #hint {
     position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-    color: #ffffffdd; font-size: 17px; text-align: center; z-index: 15;
+    color: #ffffffdd; font-size: 16px; text-align: center; z-index: 15;
     text-shadow: 0 1px 3px rgba(0,0,0,0.35);
-    max-width: 90%;
+    max-width: 92%;
   }
 
   .critter {
@@ -34,6 +34,7 @@
     animation: floatIn 0.35s ease-out, wiggle 2.4s ease-in-out infinite;
     filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25));
   }
+  .critter svg { display: block; width: 100%; height: 100%; overflow: visible; }
   .critter.wobble { animation: floatIn 0.35s ease-out, wobbleBig 1.6s ease-in-out infinite; }
   @keyframes floatIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes wiggle { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
@@ -45,63 +46,17 @@
   .critter.vanish { animation: vanishOut 0.3s ease-in forwards !important; pointer-events: none; }
   @keyframes vanishOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.3); opacity: 0; } }
 
-  .part { position: absolute; }
+  .dizzy-eye { animation: dizzySpin 1.2s linear infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes dizzySpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-  /* ---- shared limb ---- */
-  .leg { position:absolute; bottom:-4%; width:10%; height:20%; border-radius:6px; }
+  .sparkle { animation: sparkleBob 1s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes sparkleBob { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.2); } }
 
-  /* ---- HORSE ---- */
-  .horse-body { left:14%; top:38%; width:72%; height:44%; background:#a5673f; border-radius:46% 46% 40% 40%; }
-  .horse-head { left:52%; top:6%; width:40%; height:38%; background:#a5673f; border-radius:48% 48% 40% 40%; }
-  .horse-snout { left:70%; top:22%; width:26%; height:20%; background:#8a5230; border-radius:40%; }
-  .horse-mane { left:46%; top:2%; width:16%; height:34%; background:#5c3a22; border-radius:40% 10% 40% 10%; }
-  .horse-ear { width:10%; height:14%; background:#a5673f; border-radius:50% 50% 20% 20%; top:2%; }
-  .horse-ear.l { left:54%; } .horse-ear.r { left:76%; }
-  .horse-glasses-bridge { left:66%; top:32%; width:16%; height:5%; background:#151515; border-radius:4px; }
-  .horse-glass { width:20%; height:20%; background:#dff3ff; border:5px solid #151515; border-radius:5px; top:24%; }
-  .horse-glass.l { left:56%; } .horse-glass.r { left:78%; }
-  .horse-tail { left:4%; top:44%; width:12%; height:26%; background:#5c3a22; border-radius:0 60% 60% 0; }
+  .cape { animation: capeFlutter 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: top center; }
+  @keyframes capeFlutter { 0%,100% { transform: skewX(-4deg); } 50% { transform: skewX(4deg); } }
 
-  /* ---- SHEEP ---- */
-  .sheep-fluff { background:#faf7ef; border-radius:50%; }
-  .sheep-face { left:36%; top:34%; width:30%; height:30%; background:#4a4440; border-radius:50%; }
-  .sheep-ear { width:12%; height:12%; background:#e7cdb0; border-radius:50%; top:44%; }
-  .sheep-ear.l { left:22%; } .sheep-ear.r { left:66%; }
-  .sheep-eye { width:6%; height:6%; background:#fff; border-radius:50%; top:44%; }
-  .sheep-eye.l { left:40%; } .sheep-eye.r { left:54%; }
-  .sheep-hat { left:34%; top:6%; width:32%; height:16%; border-radius:50% 50% 10% 10%; }
-  .sheep-hat-brim { left:28%; top:19%; width:44%; height:6%; border-radius:8px; }
-
-  /* ---- GIRAFFE ---- */
-  .giraffe-body { left:24%; top:56%; width:52%; height:30%; background:#f0c14c; border-radius:40%; }
-  .giraffe-neck { left:38%; top:8%; width:22%; height:52%; background:#f0c14c; border-radius:30%; }
-  .giraffe-head { left:32%; top:2%; width:34%; height:22%; background:#f0c14c; border-radius:44%; }
-  .giraffe-horn { width:6%; height:12%; background:#e0a83c; border-radius:4px; top:-6%; }
-  .giraffe-horn.l { left:38%; } .giraffe-horn.r { left:56%; }
-  .giraffe-hornball { width:8%; height:8%; background:#c98a2e; border-radius:50%; top:-10%; }
-  .giraffe-hornball.l { left:37%; } .giraffe-hornball.r { left:55%; }
-  .giraffe-ear { width:10%; height:8%; background:#e0a83c; border-radius:50%; top:6%; }
-  .giraffe-ear.l { left:28%; } .giraffe-ear.r { left:62%; }
-  .giraffe-spot { background:#b5731d; border-radius:40%; }
-  .giraffe-swirl { left:48%; top:-22%; font-size: 0.9em; }
-  .giraffe-eye-x { color:#5a3a10; font-weight:bold; position:absolute; top:8%; font-size:0.7em; }
-  .giraffe-eye-x.l { left:34%; } .giraffe-eye-x.r { left:52%; }
-
-  /* ---- BABY BULL (decoy) ---- */
-  .bull-body { left:16%; top:42%; width:68%; height:42%; background:#8d7a6b; border-radius:44%; }
-  .bull-head { left:56%; top:14%; width:38%; height:36%; background:#8d7a6b; border-radius:50%; }
-  .bull-snout { left:76%; top:34%; width:20%; height:16%; background:#c9a789; border-radius:40%; }
-  .bull-nostril { width:3%; height:3%; background:#3a2a20; border-radius:50%; top:40%; }
-  .bull-nostril.n1 { left:80%; } .bull-nostril.n2 { left:88%; }
-  .bull-horn { width:12%; height:6%; background:#efe6d8; border-radius:6px; top:12%; }
-  .bull-horn.h1 { left:54%; transform:rotate(-20deg); } .bull-horn.h2 { left:70%; transform:rotate(20deg); }
-  .bull-eye { width:5%; height:6%; background:#241a12; border-radius:50%; top:26%; left:66%; }
-  .bull-ear { width:9%; height:8%; background:#7a6350; border-radius:50%; top:20%; }
-  .bull-ear.e1 { left:58%; } .bull-ear.e2 { left:80%; }
-  .bull-diaper { left:12%; top:60%; width:60%; height:32%; background:#ffffff; border-radius:30px; box-shadow: inset 0 -6px 0 #e6e6e6; }
-  .bull-diaper-tab { width:8%; height:12%; background:#7fd0e8; border-radius:4px; top:66%; }
-  .bull-diaper-tab.t1 { left:6%; } .bull-diaper-tab.t2 { left:70%; }
-  .bull-tail { left:4%; top:46%; width:14%; height:8%; background:#6e5340; border-radius:6px; }
+  .steam-puff { animation: steamPuff 0.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes steamPuff { 0% { transform:translateY(0) scale(0.6); opacity:0.8; } 100% { transform:translateY(-20px) scale(1.4); opacity:0; } }
 
   /* ---- LOSE OVERLAY ---- */
   #loseOverlay {
@@ -128,25 +83,12 @@
     position:absolute; width:260px; height:220px;
     animation: furiousCharge 0.9s ease-in forwards;
   }
+  .furious-bull svg { display:block; width:100%; height:100%; overflow:visible; }
   @keyframes furiousCharge {
     0% { transform: scale(0.15) translateY(40px); opacity:0.4; }
     70% { transform: scale(1.5) translateY(0); opacity:1; }
     100% { transform: scale(2.6) translateY(-10px); opacity:1; }
   }
-  .fb-body { position:absolute; left:20px; top:80px; width:210px; height:120px; background:#5a1f1f; border-radius:50px; }
-  .fb-head { position:absolute; left:150px; top:20px; width:110px; height:100px; background:#5a1f1f; border-radius:50%; }
-  .fb-snout { position:absolute; left:210px; top:70px; width:60px; height:46px; background:#8a4a3a; border-radius:40%; }
-  .fb-nostril { position:absolute; width:10px; height:14px; background:#1a0a08; border-radius:50%; top:82px; }
-  .fb-nostril.n1 { left:222px; } .fb-nostril.n2 { left:248px; }
-  .fb-horn { position:absolute; width:60px; height:18px; background:#f2e9da; border-radius:8px; }
-  .fb-horn.h1 { left:130px; top:30px; transform:rotate(-35deg); }
-  .fb-horn.h2 { left:190px; top:16px; transform:rotate(30deg); }
-  .fb-eye { position:absolute; width:20px; height:20px; background:#ff2020; border-radius:50%; top:56px; box-shadow:0 0 10px #ff4040; }
-  .fb-eye.e1 { left:172px; } .fb-eye.e2 { left:212px; }
-  .fb-brow { position:absolute; width:26px; height:8px; background:#1a0a08; top:46px; border-radius:4px; }
-  .fb-brow.b1 { left:168px; transform:rotate(20deg); } .fb-brow.b2 { left:206px; transform:rotate(-20deg); }
-  .fb-steam { position:absolute; width:16px; height:16px; background:#ddd; border-radius:50%; opacity:0.8; animation: steamPuff 0.6s ease-out infinite; }
-  @keyframes steamPuff { 0% { transform:translateY(0) scale(0.6); opacity:0.8; } 100% { transform:translateY(-30px) scale(1.4); opacity:0; } }
 
   .poopy {
     position:absolute; width:150px; height:170px;
@@ -183,6 +125,12 @@
   .caption-show { animation: captionIn 0.4s ease-out forwards; }
   @keyframes captionIn { to { opacity:1; } }
 
+  .lion-reveal {
+    position:absolute; width:220px; height:220px;
+    animation: poopIn 0.4s ease-out;
+  }
+  .lion-reveal svg { display:block; width:100%; height:100%; overflow:visible; }
+
   .confetti {
     position: absolute; width: 12px; height: 12px; border-radius: 3px;
     animation: confettiFall 0.9s ease-out forwards; pointer-events:none;
@@ -196,7 +144,7 @@
 <body>
   <div id="scoreBar">⭐ <span id="score">0</span></div>
   <div id="stage"></div>
-  <div id="hint">Toca só no cavalo de óculos, na ovelha do chapéu e na girafa tonta! Cuidado com o tourinho de fralda 🙈</div>
+  <div id="hint">Toca só no cavalo de óculos, na ovelha do chapéu e na girafa tonta! O super-leão dá 5 pontos ⭐ Cuidado com o tourinho de fralda 🙈</div>
   <div id="flash"></div>
   <div id="loseOverlay"></div>
 
@@ -214,11 +162,92 @@
     return e;
   }
 
-  function part(cls, styleObj) {
-    const p = el('div', 'part ' + cls);
-    if (styleObj) Object.assign(p.style, styleObj);
-    return p;
+  function randRange(min, max) {
+    return Math.random() * (max - min) + min;
   }
+
+  /* ---- SVG drawing helpers ---- */
+  function svgNS(tag, attrs) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function catmullRomPath(pts) {
+    const n = pts.length;
+    let d = `M ${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)} `;
+    for (let i = 0; i < n; i++) {
+      const p0 = pts[(i - 1 + n) % n];
+      const p1 = pts[i];
+      const p2 = pts[(i + 1) % n];
+      const p3 = pts[(i + 2) % n];
+      const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+      const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+      const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+      const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += `C ${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)} `;
+    }
+    return d + 'Z';
+  }
+
+  function fluffyBlobPath(cx, cy, r, jitter, n) {
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const rr = r * (1 + randRange(-jitter, jitter));
+      pts.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr]);
+    }
+    return catmullRomPath(pts);
+  }
+
+  function spikyPath(cx, cy, rIn, rOut, spikes, rot) {
+    rot = rot || 0;
+    let d = '';
+    const total = spikes * 2;
+    for (let i = 0; i < total; i++) {
+      const a = (i / total) * Math.PI * 2 + rot - Math.PI / 2;
+      const r = i % 2 === 0 ? rOut : rIn;
+      const x = cx + Math.cos(a) * r;
+      const y = cy + Math.sin(a) * r;
+      d += (i === 0 ? 'M' : 'L') + ` ${x.toFixed(1)},${y.toFixed(1)} `;
+    }
+    return d + 'Z';
+  }
+
+  function spiralPath(cx, cy, maxR, turns, segs) {
+    let d = '';
+    for (let i = 0; i <= segs; i++) {
+      const t = i / segs;
+      const a = t * turns * Math.PI * 2;
+      const r = t * maxR;
+      const x = cx + Math.cos(a) * r;
+      const y = cy + Math.sin(a) * r;
+      d += (i === 0 ? 'M' : 'L') + ` ${x.toFixed(1)},${y.toFixed(1)} `;
+    }
+    return d;
+  }
+
+  function makeSVG(viewBox) {
+    return svgNS('svg', { viewBox, xmlns: 'http://www.w3.org/2000/svg' });
+  }
+
+  function addDefs(svg) {
+    const defs = svgNS('defs', {});
+    svg.appendChild(defs);
+    return defs;
+  }
+
+  let gradCounter = 0;
+  function uid() { return 'g' + (gradCounter++); }
+
+  function radialGrad(defs, id, stops) {
+    const grad = svgNS('radialGradient', { id, cx: '35%', cy: '30%', r: '75%' });
+    stops.forEach(s => grad.appendChild(svgNS('stop', { offset: s.offset, 'stop-color': s.color })));
+    defs.appendChild(grad);
+    return `url(#${id})`;
+  }
+
+  const VB = { horse: [220,190], sheep: [200,190], giraffe: [170,280], bull: [200,170], lion: [220,220] };
 
   /* ---- Audio ---- */
   let audioCtx = null;
@@ -271,9 +300,15 @@
     const now = audioCtx.currentTime;
     [392, 440, 494, 523].forEach((f, i) => tone(f, now + i * 0.07, 0.2, 'square', 0.12));
   }
-
-  function randRange(min, max) {
-    return Math.random() * (max - min) + min;
+  function playHeroic() {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    [523.25, 659.25, 783.99].forEach((f, i) => tone(f, now + i * 0.08, 0.24, 'triangle', 0.24));
+  }
+  function playSilly() {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    [320, 260, 210].forEach((f, i) => tone(f, now + i * 0.1, 0.18, 'square', 0.14));
   }
 
   /* ---- Confetti ---- */
@@ -293,90 +328,235 @@
     }
   }
 
-  /* ---- Critter builders ---- */
-  function buildHorse(container) {
-    container.appendChild(part('horse-tail'));
-    container.appendChild(part('horse-body'));
-    container.appendChild(part('horse-ear l'));
-    container.appendChild(part('horse-ear r'));
-    container.appendChild(part('horse-mane'));
-    container.appendChild(part('horse-head'));
-    container.appendChild(part('horse-snout'));
-    container.appendChild(part('horse-glasses-bridge'));
-    container.appendChild(part('horse-glass l'));
-    container.appendChild(part('horse-glass r'));
-  }
+  /* ---- Creature builders (organic SVG illustrations) ---- */
+  function buildHorseSVG() {
+    const svg = makeSVG('0 0 220 190');
+    const defs = addDefs(svg);
+    const bodyGrad = radialGrad(defs, uid(), [{offset:'0%',color:'#c98a5a'},{offset:'100%',color:'#8a5230'}]);
 
-  function buildSheep(container) {
-    const puffs = [
-      {l:10,t:30,w:26,h:26},{l:30,t:14,w:30,h:30},{l:56,t:14,w:30,h:30},
-      {l:78,t:30,w:26,h:26},{l:20,t:44,w:30,h:30},{l:50,t:44,w:32,h:32}
-    ];
-    puffs.forEach(p => {
-      container.appendChild(part('sheep-fluff', { left:p.l+'%', top:p.t+'%', width:p.w+'%', height:p.h+'%' }));
+    svg.appendChild(svgNS('path', { d:'M 25,120 C 5,110 5,140 20,155 C 15,165 25,168 35,158 C 30,145 32,130 40,122 Z', fill:'#6b4226' }));
+
+    [[52,150],[74,150],[138,150],[160,150]].forEach(([x,y]) => {
+      svg.appendChild(svgNS('rect', { x, y, width:16, height:32, rx:7, fill: bodyGrad }));
+      svg.appendChild(svgNS('rect', { x:x-1, y:y+26, width:18, height:9, rx:3, fill:'#3a2416' }));
     });
-    container.appendChild(part('sheep-face'));
-    container.appendChild(part('sheep-ear l'));
-    container.appendChild(part('sheep-ear r'));
-    container.appendChild(part('sheep-eye l'));
-    container.appendChild(part('sheep-eye r'));
-    const hatColors = ['#e05263', '#3d84a8', '#f2a541', '#7a4ca0'];
-    const hatColor = hatColors[Math.floor(Math.random() * hatColors.length)];
-    container.appendChild(part('sheep-hat', { background: hatColor }));
-    container.appendChild(part('sheep-hat-brim', { background: hatColor }));
-    for (let i = 0; i < 4; i++) {
-      container.appendChild(part('leg', { left: (26 + i * 16) + '%', background:'#3a3632' }));
+
+    svg.appendChild(svgNS('ellipse', { cx:100, cy:120, rx:60, ry:42, fill: bodyGrad }));
+    svg.appendChild(svgNS('path', { d:'M 128,138 C 138,98 150,66 168,40 C 184,54 182,92 166,134 Z', fill: bodyGrad }));
+
+    for (let i = 0; i < 6; i++) {
+      const t = i / 5;
+      const nx = 168 - t * 32;
+      const ny = 44 + t * 88;
+      svg.appendChild(svgNS('path', {
+        d:`M ${nx-6},${ny} C ${nx-15},${ny-8} ${nx-15},${ny+9} ${nx-3},${ny+15} C ${nx+3},${ny+6} ${nx+3},${ny-6} ${nx-6},${ny} Z`,
+        fill:'#5c3a22'
+      }));
     }
+
+    svg.appendChild(svgNS('ellipse', { cx:178, cy:46, rx:30, ry:25, fill: bodyGrad }));
+    svg.appendChild(svgNS('ellipse', { cx:203, cy:56, rx:17, ry:13, fill:'#c98a5a' }));
+    svg.appendChild(svgNS('ellipse', { cx:212, cy:58, rx:3, ry:4, fill:'#3a2416' }));
+
+    [-1,1].forEach(s => {
+      svg.appendChild(svgNS('path', { d:`M ${168+s*11},30 C ${162+s*11},14 ${178+s*11},9 ${184+s*11},24 C ${178+s*11},31 ${172+s*11},33 ${168+s*11},30 Z`, fill: bodyGrad }));
+    });
+
+    svg.appendChild(svgNS('rect', { x:174, y:42, width:14, height:4, rx:2, fill:'#161616' }));
+    svg.appendChild(svgNS('rect', { x:160, y:34, width:18, height:18, rx:5, fill:'#dff3ff', stroke:'#161616', 'stroke-width':4 }));
+    svg.appendChild(svgNS('rect', { x:186, y:34, width:18, height:18, rx:5, fill:'#dff3ff', stroke:'#161616', 'stroke-width':4 }));
+    svg.appendChild(svgNS('circle', { cx:183, cy:44, r:3.6, fill:'#2b1a0e' }));
+    svg.appendChild(svgNS('circle', { cx:184.5, cy:42.5, r:1.2, fill:'#fff' }));
+
+    return svg;
   }
 
-  function buildGiraffe(container) {
-    for (let i = 0; i < 4; i++) {
-      container.appendChild(part('leg', { left: (28 + i * 12) + '%', height:'26%', background:'#f0c14c' }));
-    }
-    container.appendChild(part('giraffe-body'));
-    const spots = [
-      {l:30,t:60,s:8},{l:44,t:66,s:7},{l:58,t:58,s:8},{l:36,t:20,s:6},{l:48,t:34,s:6}
-    ];
-    spots.forEach(s => container.appendChild(part('giraffe-spot', { left:s.l+'%', top:s.t+'%', width:s.s+'%', height:s.s+'%' })));
-    container.appendChild(part('giraffe-neck'));
-    container.appendChild(part('giraffe-ear l'));
-    container.appendChild(part('giraffe-ear r'));
-    container.appendChild(part('giraffe-hornball l'));
-    container.appendChild(part('giraffe-hornball r'));
-    container.appendChild(part('giraffe-horn l'));
-    container.appendChild(part('giraffe-horn r'));
-    container.appendChild(part('giraffe-head'));
-    const xL = part('giraffe-eye-x l'); xL.textContent = '@';
-    const xR = part('giraffe-eye-x r'); xR.textContent = '@';
-    container.appendChild(xL);
-    container.appendChild(xR);
-    const swirl = part('giraffe-swirl');
-    swirl.textContent = '💫';
-    container.appendChild(swirl);
+  function buildSheepSVG() {
+    const svg = makeSVG('0 0 200 190');
+    const defs = addDefs(svg);
+    const woolGrad = radialGrad(defs, uid(), [{offset:'0%',color:'#ffffff'},{offset:'100%',color:'#e3ddcf'}]);
+
+    [50,75,110,135].forEach(x => svg.appendChild(svgNS('rect', { x, y:150, width:9, height:26, rx:3, fill:'#3a3632' })));
+
+    svg.appendChild(svgNS('path', { d: fluffyBlobPath(100,100,58,0.22,14), fill: woolGrad, stroke:'#e3ddcf', 'stroke-width':2 }));
+
+    svg.appendChild(svgNS('ellipse', { cx:72, cy:100, rx:26, ry:23, fill:'#4a4440' }));
+    [-1,1].forEach(s => svg.appendChild(svgNS('ellipse', { cx:72+s*24, cy:104, rx:9, ry:12, fill:'#e7cdb0' })));
+    [-8,8].forEach(dx => {
+      svg.appendChild(svgNS('circle', { cx:72+dx, cy:96, r:5, fill:'#fff' }));
+      svg.appendChild(svgNS('circle', { cx:73+dx, cy:97, r:2.4, fill:'#1a1a1a' }));
+    });
+    svg.appendChild(svgNS('path', { d:'M 62,112 Q 72,120 82,112', stroke:'#241a12', 'stroke-width':3, fill:'none', 'stroke-linecap':'round' }));
+
+    const hatColors = ['#e05263','#3d84a8','#f2a541','#7a4ca0'];
+    const hatColor = hatColors[Math.floor(Math.random()*hatColors.length)];
+    svg.appendChild(svgNS('path', { d:'M 74,46 C 74,18 116,18 116,46 Z', fill: hatColor }));
+    svg.appendChild(svgNS('ellipse', { cx:95, cy:46, rx:26, ry:9, fill: hatColor }));
+    svg.appendChild(svgNS('circle', { cx:95, cy:18, r:6, fill: hatColor }));
+
+    return svg;
   }
 
-  function buildBabyBull(container) {
-    container.appendChild(part('bull-tail'));
-    container.appendChild(part('bull-body'));
-    container.appendChild(part('bull-diaper'));
-    container.appendChild(part('bull-diaper-tab t1'));
-    container.appendChild(part('bull-diaper-tab t2'));
-    container.appendChild(part('bull-ear e1'));
-    container.appendChild(part('bull-ear e2'));
-    container.appendChild(part('bull-horn h1'));
-    container.appendChild(part('bull-horn h2'));
-    container.appendChild(part('bull-head'));
-    container.appendChild(part('bull-eye'));
-    container.appendChild(part('bull-snout'));
-    container.appendChild(part('bull-nostril n1'));
-    container.appendChild(part('bull-nostril n2'));
+  function buildGiraffeSVG() {
+    const svg = makeSVG('0 0 170 280');
+    const defs = addDefs(svg);
+    const bodyGrad = radialGrad(defs, uid(), [{offset:'0%',color:'#ffd873'},{offset:'100%',color:'#e0a83c'}]);
+
+    [45,65,95,115].forEach(x => {
+      svg.appendChild(svgNS('rect', { x, y:238, width:12, height:38, rx:5, fill: bodyGrad }));
+      svg.appendChild(svgNS('rect', { x:x-1, y:270, width:14, height:8, rx:3, fill:'#5c3a22' }));
+    });
+
+    svg.appendChild(svgNS('ellipse', { cx:85, cy:220, rx:48, ry:36, fill: bodyGrad }));
+    svg.appendChild(svgNS('path', { d:'M 62,210 C 55,150 58,90 70,40 C 85,35 100,35 110,42 C 100,95 100,155 105,210 Z', fill: bodyGrad }));
+
+    for (let i = 0; i < 9; i++) {
+      const sx = randRange(50,120);
+      const sy = randRange(45,230);
+      svg.appendChild(svgNS('path', { d: fluffyBlobPath(sx, sy, randRange(7,12), 0.3, 7), fill:'#b5731d', opacity:0.85 }));
+    }
+
+    svg.appendChild(svgNS('ellipse', { cx:85, cy:32, rx:24, ry:19, fill: bodyGrad }));
+    [-1,1].forEach(s => {
+      svg.appendChild(svgNS('rect', { x:85+s*9-2, y:6, width:4, height:14, fill:'#e0a83c' }));
+      svg.appendChild(svgNS('circle', { cx:85+s*9, cy:6, r:5, fill:'#c98a2e' }));
+    });
+    [-1,1].forEach(s => svg.appendChild(svgNS('ellipse', { cx:85+s*22, cy:26, rx:9, ry:6, fill:'#e0a83c' })));
+
+    [-9,9].forEach(dx => {
+      const spiral = svgNS('path', { d: spiralPath(85+dx, 32, 7, 2, 20), stroke:'#5a3a10', 'stroke-width':1.6, fill:'none', 'stroke-linecap':'round' });
+      spiral.setAttribute('class', 'dizzy-eye');
+      svg.appendChild(spiral);
+    });
+
+    [[60,-6],[95,-14],[115,2]].forEach(([sx,sy]) => {
+      const spark = svgNS('path', { d: spikyPath(sx, sy, 2, 6, 4), fill:'#fff6b0' });
+      spark.setAttribute('class', 'sparkle');
+      svg.appendChild(spark);
+    });
+
+    return svg;
+  }
+
+  function buildBullSVG(mood) {
+    const furious = mood === 'furious';
+    const svg = makeSVG('0 0 200 170');
+    const defs = addDefs(svg);
+    const bodyColors = furious ? ['#7a2020','#3a0f0f'] : ['#a08a76','#7a6350'];
+    const bodyGrad = radialGrad(defs, uid(), [{offset:'0%',color:bodyColors[0]},{offset:'100%',color:bodyColors[1]}]);
+
+    svg.appendChild(svgNS('path', { d:'M 20,90 C 5,85 5,105 15,115 C 20,120 28,116 26,108 C 24,100 24,94 20,90 Z', fill: bodyColors[1] }));
+    svg.appendChild(svgNS('ellipse', { cx:95, cy:105, rx:58, ry:38, fill: bodyGrad }));
+    svg.appendChild(svgNS('circle', { cx:155, cy:56, r:34, fill: bodyGrad }));
+    [-1,1].forEach(s => svg.appendChild(svgNS('ellipse', { cx:155+s*26, cy:40, rx:10, ry:8, fill: bodyColors[1] })));
+
+    if (furious) {
+      svg.appendChild(svgNS('path', { d:'M 128,34 C 110,22 100,10 108,2 C 122,8 134,20 140,32 Z', fill:'#f2e9da' }));
+      svg.appendChild(svgNS('path', { d:'M 182,30 C 200,16 212,4 206,-4 C 190,4 176,16 170,28 Z', fill:'#f2e9da' }));
+    } else {
+      svg.appendChild(svgNS('path', { d:'M 134,30 C 126,22 128,14 136,14 C 142,20 140,28 134,30 Z', fill:'#f2e9da' }));
+      svg.appendChild(svgNS('path', { d:'M 176,30 C 184,22 182,14 174,14 C 168,20 170,28 176,30 Z', fill:'#f2e9da' }));
+    }
+
+    svg.appendChild(svgNS('ellipse', { cx:180, cy:66, rx:20, ry:16, fill: furious ? '#8a4a3a' : '#c9a789' }));
+    [[172,62],[188,62]].forEach(([nx,ny]) => svg.appendChild(svgNS('ellipse', { cx:nx, cy:ny, rx: furious?4:2.5, ry: furious?5:3, fill:'#241a12' })));
+
+    if (furious) {
+      [[142,48],[168,48]].forEach(([ex,ey]) => {
+        svg.appendChild(svgNS('circle', { cx:ex, cy:ey, r:7, fill:'#ff2a2a' }));
+        svg.appendChild(svgNS('circle', { cx:ex, cy:ey, r:7, fill:'none', stroke:'#ff8080', 'stroke-width':2 }));
+      });
+      svg.appendChild(svgNS('rect', { x:134, y:34, width:18, height:5, rx:2, fill:'#1a0a08', transform:'rotate(15 143 36)' }));
+      svg.appendChild(svgNS('rect', { x:162, y:34, width:18, height:5, rx:2, fill:'#1a0a08', transform:'rotate(-15 171 36)' }));
+      [[168,44],[182,42]].forEach(([sx,sy],i) => {
+        const steam = svgNS('circle', { cx:sx, cy:sy, r:5, fill:'#ddd', opacity:0.8 });
+        steam.setAttribute('class', 'steam-puff');
+        steam.style.animationDelay = (i*0.2)+'s';
+        svg.appendChild(steam);
+      });
+    } else {
+      [[145,48],[165,48]].forEach(([ex,ey]) => {
+        svg.appendChild(svgNS('circle', { cx:ex, cy:ey, r:6, fill:'#241a12' }));
+        svg.appendChild(svgNS('circle', { cx:ex+1.5, cy:ey-1.5, r:1.6, fill:'#fff' }));
+      });
+      svg.appendChild(svgNS('ellipse', { cx:180, cy:78, rx:9, ry:6, fill:'none', stroke:'#d8d0c0', 'stroke-width':3 }));
+      svg.appendChild(svgNS('path', { d:'M 45,110 C 45,95 145,95 145,110 L 145,140 C 145,155 45,155 45,140 Z', fill:'#ffffff' }));
+      svg.appendChild(svgNS('rect', { x:38, y:118, width:10, height:14, rx:3, fill:'#7fd0e8' }));
+      svg.appendChild(svgNS('rect', { x:142, y:118, width:10, height:14, rx:3, fill:'#7fd0e8' }));
+    }
+
+    return svg;
+  }
+
+  function buildLionSVG() {
+    const svg = makeSVG('0 0 220 220');
+    const defs = addDefs(svg);
+    const faceGrad = radialGrad(defs, uid(), [{offset:'0%',color:'#ffe3a8'},{offset:'100%',color:'#f2c46b'}]);
+
+    const cape = svgNS('path', {
+      d:'M 70,110 C 60,150 55,190 75,210 C 90,195 130,195 145,210 C 165,190 160,150 150,110 C 130,125 90,125 70,110 Z',
+      fill:'#d0342c'
+    });
+    cape.setAttribute('class', 'cape');
+    svg.appendChild(cape);
+    svg.appendChild(svgNS('path', { d:'M 75,112 C 95,122 125,122 145,112', stroke:'#f2c46b', 'stroke-width':4, fill:'none' }));
+    svg.appendChild(svgNS('path', { d: spikyPath(110,165,6,14,5), fill:'#f2c46b' }));
+
+    svg.appendChild(svgNS('ellipse', { cx:110, cy:150, rx:34, ry:30, fill:'#e8b04a' }));
+    svg.appendChild(svgNS('path', { d: spikyPath(110,148,6,13,5), fill:'#fff6d6' }));
+
+    svg.appendChild(svgNS('path', { d: spikyPath(110,95,36,62,14), fill:'#d4841a' }));
+    svg.appendChild(svgNS('path', { d: spikyPath(110,95,32,52,14,0.2), fill:'#f2a541' }));
+
+    [-1,1].forEach(s => svg.appendChild(svgNS('circle', { cx:110+s*34, cy:62, r:11, fill:'#d4841a' })));
+    [-1,1].forEach(s => svg.appendChild(svgNS('circle', { cx:110+s*34, cy:62, r:6, fill:'#7a4a12' })));
+
+    svg.appendChild(svgNS('circle', { cx:110, cy:95, r:34, fill: faceGrad }));
+    svg.appendChild(svgNS('ellipse', { cx:110, cy:108, rx:16, ry:12, fill:'#fff6e0' }));
+    [-13,13].forEach(dx => {
+      svg.appendChild(svgNS('path', { d:`M ${110+dx-6},92 Q ${110+dx},84 ${110+dx+6},92`, stroke:'#3a2410', 'stroke-width':3, fill:'none', 'stroke-linecap':'round' }));
+    });
+    svg.appendChild(svgNS('path', { d:'M 104,104 L 116,104 L 110,112 Z', fill:'#3a2410' }));
+    svg.appendChild(svgNS('path', { d:'M 98,112 Q 110,122 122,112', stroke:'#3a2410', 'stroke-width':3, fill:'none', 'stroke-linecap':'round' }));
+
+    return svg;
+  }
+
+  function buildEmbarrassedLionSVG() {
+    const svg = makeSVG('0 0 260 260');
+    const defs = addDefs(svg);
+    const faceGrad = radialGrad(defs, uid(), [{offset:'0%',color:'#ffe3a8'},{offset:'100%',color:'#f2c46b'}]);
+
+    svg.appendChild(svgNS('path', { d: spikyPath(130,130,42,74,14), fill:'#d4841a' }));
+    svg.appendChild(svgNS('path', { d: spikyPath(130,130,38,62,14,0.2), fill:'#f2a541' }));
+    [-1,1].forEach(s => svg.appendChild(svgNS('circle', { cx:130+s*40, cy:92, r:13, fill:'#d4841a' })));
+    [-1,1].forEach(s => svg.appendChild(svgNS('circle', { cx:130+s*40, cy:92, r:7, fill:'#7a4a12' })));
+
+    svg.appendChild(svgNS('circle', { cx:130, cy:130, r:42, fill: faceGrad }));
+    [-1,1].forEach(s => svg.appendChild(svgNS('ellipse', { cx:130+s*30, cy:140, rx:9, ry:6, fill:'#ff8fa3', opacity:0.7 })));
+
+    [-16,16].forEach(dx => {
+      svg.appendChild(svgNS('path', { d:`M ${130+dx-8},122 Q ${130+dx},112 ${130+dx+8},122`, stroke:'#3a2410', 'stroke-width':4, fill:'none', 'stroke-linecap':'round' }));
+    });
+
+    svg.appendChild(svgNS('path', { d:'M 122,138 L 138,138 L 130,148 Z', fill:'#3a2410' }));
+    svg.appendChild(svgNS('path', { d:'M 133,148 C 140,156 140,168 132,170 C 124,168 126,156 133,148 Z', fill:'#b7d33c' }));
+    svg.appendChild(svgNS('ellipse', { cx:131, cy:156, rx:2.4, ry:3.4, fill:'#e6f2a0', opacity:0.8 }));
+
+    svg.appendChild(svgNS('path', { d:'M 104,148 C 112,172 148,172 156,148 C 148,158 112,158 104,148 Z', fill:'#7a2020' }));
+    for (let i = 0; i < 5; i++) {
+      if (i === 2) continue;
+      svg.appendChild(svgNS('rect', { x: 110 + i * 10, y:150, width:8, height:9, rx:2, fill:'#fff' }));
+    }
+    svg.appendChild(svgNS('ellipse', { cx:130, cy:166, rx:12, ry:6, fill:'#e0607a' }));
+
+    return svg;
   }
 
   const TYPES = {
-    horse: { build: buildHorse, wobble: false },
-    sheep: { build: buildSheep, wobble: false },
-    giraffe: { build: buildGiraffe, wobble: true },
-    bull: { build: buildBabyBull, wobble: false }
+    horse: { build: buildHorseSVG, wobble: false },
+    sheep: { build: buildSheepSVG, wobble: false },
+    giraffe: { build: buildGiraffeSVG, wobble: true }
   };
 
   function pickType() {
@@ -390,12 +570,13 @@
     if (!gameActive) return;
     const type = pickType();
     const def = TYPES[type];
+    const vb = VB[type];
     const container = el('div', 'critter' + (def.wobble ? ' wobble' : ''));
     container.dataset.type = type;
 
     const size = type === 'giraffe' ? (140 + Math.random() * 50) : (110 + Math.random() * 60);
     container.style.width = size + 'px';
-    container.style.height = (size * (type === 'giraffe' ? 1.3 : 0.9)) + 'px';
+    container.style.height = (size * vb[1] / vb[0]) + 'px';
 
     const margin = size;
     const x = Math.random() * (window.innerWidth - margin * 1.1) + margin * 0.05;
@@ -404,8 +585,7 @@
     container.style.top = y + 'px';
     container.style.animationDuration = (2 + Math.random() * 1.5) + 's, ' + (1.6 + Math.random() * 1.2) + 's';
 
-    def.build(container);
-
+    container.appendChild(def.build());
     container.addEventListener('pointerdown', () => handleTap(container, type), { once: true });
     stage.appendChild(container);
   }
@@ -415,6 +595,10 @@
     ensureAudio();
     if (type === 'bull') {
       triggerLose();
+      return;
+    }
+    if (type === 'lion') {
+      handleLionTap(container);
       return;
     }
     const rect = container.getBoundingClientRect();
@@ -434,13 +618,13 @@
   /* ---- Baby bull: peeks in and out on its own, sometimes in a big group ---- */
   function spawnBull(visibleMs) {
     if (!gameActive) return;
-    const def = TYPES.bull;
+    const vb = VB.bull;
     const container = el('div', 'critter');
     container.dataset.type = 'bull';
 
     const size = 100 + Math.random() * 50;
     container.style.width = size + 'px';
-    container.style.height = (size * 0.9) + 'px';
+    container.style.height = (size * vb[1] / vb[0]) + 'px';
 
     const margin = size;
     const x = randRange(margin * 0.05, window.innerWidth - margin * 1.15);
@@ -449,7 +633,7 @@
     container.style.top = y + 'px';
     container.style.animationDuration = (2 + Math.random() * 1.5) + 's, ' + (1.6 + Math.random() * 1.2) + 's';
 
-    def.build(container);
+    container.appendChild(buildBullSVG('baby'));
     container.addEventListener('pointerdown', () => handleTap(container, 'bull'), { once: true });
     stage.appendChild(container);
 
@@ -485,6 +669,63 @@
     }, randRange(16000, 26000));
   }
 
+  /* ---- Super lion: peeks in and out; tapping it is a reward ---- */
+  function spawnLion(visibleMs) {
+    if (!gameActive) return;
+    const vb = VB.lion;
+    const container = el('div', 'critter');
+    container.dataset.type = 'lion';
+
+    const size = 130 + Math.random() * 50;
+    container.style.width = size + 'px';
+    container.style.height = (size * vb[1] / vb[0]) + 'px';
+
+    const margin = size;
+    const x = randRange(margin * 0.05, window.innerWidth - margin * 1.15);
+    const y = randRange(margin * 0.1, window.innerHeight - margin * 1.3);
+    container.style.left = x + 'px';
+    container.style.top = y + 'px';
+    container.style.animationDuration = (2 + Math.random() * 1.5) + 's, ' + (1.6 + Math.random() * 1.2) + 's';
+
+    container.appendChild(buildLionSVG());
+    container.addEventListener('pointerdown', () => handleTap(container, 'lion'), { once: true });
+    stage.appendChild(container);
+
+    setTimeout(() => {
+      if (!container.isConnected) return;
+      container.classList.add('vanish');
+      setTimeout(() => container.remove(), 300);
+    }, visibleMs);
+  }
+
+  function scheduleLion() {
+    setTimeout(() => {
+      if (gameActive && !document.querySelector('.critter[data-type="lion"]')) {
+        spawnLion(randRange(1800, 2500));
+      }
+      scheduleLion();
+    }, randRange(8000, 12000));
+  }
+
+  function handleLionTap(container) {
+    container.classList.add('pop');
+    setTimeout(() => container.remove(), 350);
+    playHeroic();
+    score += 5;
+    scoreEl.textContent = score;
+    setTimeout(showLionReveal, 300);
+  }
+
+  function showLionReveal() {
+    playSilly();
+    const reveal = el('div', 'lion-reveal');
+    reveal.style.left = (window.innerWidth / 2 - 110) + 'px';
+    reveal.style.top = (window.innerHeight / 2 - 110) + 'px';
+    reveal.appendChild(buildEmbarrassedLionSVG());
+    loseOverlay.appendChild(reveal);
+    setTimeout(() => reveal.remove(), 1900);
+  }
+
   function triggerLose() {
     gameActive = false;
     clearStage();
@@ -494,17 +735,7 @@
     const bull = el('div', 'furious-bull');
     bull.style.left = (window.innerWidth / 2 - 130) + 'px';
     bull.style.top = (window.innerHeight / 2 - 110) + 'px';
-    bull.innerHTML = `
-      <div class="fb-body"></div>
-      <div class="fb-horn h1"></div><div class="fb-horn h2"></div>
-      <div class="fb-head"></div>
-      <div class="fb-brow b1"></div><div class="fb-brow b2"></div>
-      <div class="fb-eye e1"></div><div class="fb-eye e2"></div>
-      <div class="fb-snout"></div>
-      <div class="fb-nostril n1"></div><div class="fb-nostril n2"></div>
-      <div class="fb-steam" style="left:210px; top:65px; animation-delay:0s;"></div>
-      <div class="fb-steam" style="left:238px; top:70px; animation-delay:0.2s;"></div>
-    `;
+    bull.appendChild(buildBullSVG('furious'));
     loseOverlay.appendChild(bull);
 
     setTimeout(() => {
@@ -568,6 +799,7 @@
   init();
   scheduleSingleBull();
   scheduleBullSwarm();
+  scheduleLion();
 </script>
 </body>
 </html>
